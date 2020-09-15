@@ -25,17 +25,27 @@ def username():
 def signup(): 
   y = username() 
   x = password()
-  data = open('Database.txt', 'a') #creates a file.
-  data.write(y+'\n'+str(hash(x))+'\n') #writes username and hashed password in file on 2 seperate lines.
-  
-signup()
+  check = 0
+  data = open('Database.txt', 'r')
+  lines = data.read()
+  data.close()
+  for line in lines.split("\n"):
+    if y == line:
+     # print('User match found')
+      check = 1
+    if x == line and check == 1:
+     # print('Pass match found')
+      check = 2
+  if check == 2:
+    print('Account found')
+  elif check == 1:
+    print("Incorrect password")
+    signup()
+  else:
+    print("Account created successfully")
+    data = open('Database.txt', 'a')
+    data.write(y+'\n'+x+'\n')
+    data.close()
 
-## Code to Check if y and x (user and pass) is in Database.txt *(doesnt work)*
-#data = open('Database.txt', 'r')
-#  lines = data.read()
-#  data.close()
-#  for line in lines:
-#    if y == line and x == line:
-#      print('Match found')
-#    else:
-#     print('Error')
+
+signup()
