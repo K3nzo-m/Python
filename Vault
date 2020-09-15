@@ -1,0 +1,41 @@
+import time
+
+def password():
+  x = input('Please enter your password: ')
+  if len(x) < 8:
+    print('Password not long enough. Please try again. ')
+    time.sleep(1)
+    return password()
+  else:
+    return x
+
+def username():
+  y = input('Please enter your username: ')
+  contains_digit = False #starts as false
+  for i in list(y): #repeats the amount of times there are characters in the username.
+    if i.isdigit(): #if i, the iteration (each character), is a digit:
+      contains_digit = True #set to true because a digit was detected
+  if contains_digit == True: #if a digit was detected then:
+    print('Contains digit. Please try again. ')
+    time.sleep(1)
+    return username() #restarts function, asking for username again
+  else:
+    return y
+
+def signup(): 
+  y = username() 
+  x = password()
+  data = open('Database.txt', 'a') #creates a file.
+  data.write(y+'\n'+str(hash(x))+'\n') #writes username and hashed password in file on 2 seperate lines.
+  
+signup()
+
+## Code to Check if y and x (user and pass) is in Database.txt *(doesnt work)*
+#data = open('Database.txt', 'r')
+#  lines = data.read()
+#  data.close()
+#  for line in lines:
+#    if y == line and x == line:
+#      print('Match found')
+#    else:
+#     print('Error')
