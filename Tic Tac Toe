@@ -1,51 +1,43 @@
 import os,random,time
 
-#To clear screen
+#Clear screen
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-#Board setup
+#Setup
 board = {
   "A1": ' ', "B1": ' ', "C1": ' ',
   "A2": ' ', "B2": ' ', "C2": ' ',
-  "A3": ' ', "B3": ' ', "C3": ' '
+  "A3": ' ', "B3": ' ', "C3": ''
 }
+count=0
 
-#Win/lose check
-def check():
-  #Verticle checks
-  if board["A1"] == board["A2"] and board["A2"] == board["A3"]:
-    if board["A1"] == "X":
-      return True
-    elif board["A1"] == "O":
-      return False
-  elif board["B1"] == board["B2"] and board["B2"] == board["B3"]:
-    if board["B1"] == "X":
-      return True
-    elif board["B1"] == "O":
-      return False
-  elif board["C1"] == board["C2"] and board["C2"] == board["C3"]:
-    if board["C1"] == "X":
-      return True
-    elif board["C1"] == "O":
-      return False
-  #Horizontal checks
-  if board["A1"] == board["A2"] and board["A2"] == board["A3"]:
-    if board["A1"] == "X":
-      return True
-    elif board["A1"] == "O":
-      return False
-  elif board["B1"] == board["B2"] and board["B2"] == board["B3"]:
-    if board["B1"] == "X":
-      return True
-    elif board["B1"] == "O":
-      return False
-  elif board["C1"] == board["C2"] and board["C2"] == board["C3"]:
-    if board["C1"] == "X":
-      return True
-    elif board["C1"] == "O":
-      return False
-  #Diagonal checks
+#Checks whether the 3 spots on the board are the same and what player it is
+def check_for_win(board_placement_1, board_placement_2, board_placement_3):
+    if board[board_placement_1] == board[board_placement_2] and board[board_placement_1] == board[board_placement_3]:
+        if board[board_placement_1] == "X":
+            return True
+        elif board[board_placement_1] == "O":
+            return False
+
+#Runs possibilities through check
+def possible_ways_to_win():
+  if check_for_win("A1", "A2", "A3") != None:
+    return check_for_win("A1", "A2", "A3")
+  elif check_for_win("B1", "B2", "B3") != None:
+    return check_for_win("B1", "B2", "B3")
+  elif check_for_win("C1", "C2", "C3") != None:
+    return check_for_win("C1", "C2", "C3")
+  elif check_for_win("A1", "B1", "C1") != None:
+    return check_for_win("A1", "B1", "C1")
+  elif check_for_win("A2", "B2", "B2") != None:
+    return check_for_win("A2", "B2", "B2")
+  elif check_for_win("A3", "B3", "C3") != None:
+    return check_for_win("A3", "B3", "C3")
+  elif check_for_win("A1", "B2", "C3") != None:
+    return check_for_win("A1", "B2", "C3")
+  elif check_for_win("A3", "B2", "C1") != None:
+    return check_for_win("A3", "B2", "C1")
 
 #Function to print the board
 def showBoard():
@@ -56,36 +48,49 @@ def showBoard():
 
 #User's input
 def userInput():
-  x = input("Where would you like to place your X?\n")
-  if board[x] == "X" or board[x] == "O":
-    print("That spot is taken!")
-    time.sleep(1)
-    cls()
-    showBoard()
-    userInput()
-  else:
-    board[x]='X'
-    cls()
-    showBoard()
-    if check() == True:
-      return print("YOU WIN!")
-    elif check() == False:
-      return print("YOU LOSE!")
+  global count
+  if count < 5:
+    x = input("Where would you like to place your X?\n")
+    if any(x in d for d in board) == False or x == '':
+      print("That is not a correct coordinate.")
+      time.sleep(1)
+      cls()
+      showBoard()
+      userInput()
+    elif board[x] == "X" or board[x] == "O":
+      print("That spot is taken!")
+      time.sleep(1)
+      cls()
+      showBoard()
+      userInput()
     else:
-      compInput()    
+      count = count + 1
+      board[x]='X'
+      cls()
+      showBoard()
+      if possible_ways_to_win() == True:
+        print("YOU WIN!")
+      else:
+        compInput()
+
 
 
 #Random computer-generated input
 def compInput():
-  x = random.choice(list(board))
-  if board[x] == "X" or board[x] == "O":
-    compInput()
-  else:
-    time.sleep(2)
-    board[x] = "O"
-    cls()
-    showBoard()
-    userInput()
+  global count
+  if count < 5:
+    x = random.choice(list(board))
+    if board[x] == "X" or board[x] == "O":
+      compInput()
+    else:
+      time.sleep(2)
+      board[x] = "O"
+      cls()
+      showBoard()
+      if possible_ways_to_win() == False:
+        print("YOU LOSE!")
+      else:
+        userInput()
 
 #Initiation
 showBoard()
