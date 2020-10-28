@@ -1,0 +1,92 @@
+import os,random,time
+
+#To clear screen
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+#Board setup
+board = {
+  "A1": ' ', "B1": ' ', "C1": ' ',
+  "A2": ' ', "B2": ' ', "C2": ' ',
+  "A3": ' ', "B3": ' ', "C3": ' '
+}
+
+#Win/lose check
+def check():
+  #Verticle checks
+  if board["A1"] == board["A2"] and board["A2"] == board["A3"]:
+    if board["A1"] == "X":
+      return True
+    elif board["A1"] == "O":
+      return False
+  elif board["B1"] == board["B2"] and board["B2"] == board["B3"]:
+    if board["B1"] == "X":
+      return True
+    elif board["B1"] == "O":
+      return False
+  elif board["C1"] == board["C2"] and board["C2"] == board["C3"]:
+    if board["C1"] == "X":
+      return True
+    elif board["C1"] == "O":
+      return False
+  #Horizontal checks
+  if board["A1"] == board["A2"] and board["A2"] == board["A3"]:
+    if board["A1"] == "X":
+      return True
+    elif board["A1"] == "O":
+      return False
+  elif board["B1"] == board["B2"] and board["B2"] == board["B3"]:
+    if board["B1"] == "X":
+      return True
+    elif board["B1"] == "O":
+      return False
+  elif board["C1"] == board["C2"] and board["C2"] == board["C3"]:
+    if board["C1"] == "X":
+      return True
+    elif board["C1"] == "O":
+      return False
+  #Diagonal checks
+
+#Function to print the board
+def showBoard():
+  print("   A    B    C")
+  print(" 1",board["A1"],"  ",board["B1"],"  ",board["C1"])
+  print(" 2",board["A2"],"  ",board["B2"],"  ",board["C2"])
+  print(" 3",board["A3"],"  ",board["B3"],"  ",board["C3"])
+
+#User's input
+def userInput():
+  x = input("Where would you like to place your X?\n")
+  if board[x] == "X" or board[x] == "O":
+    print("That spot is taken!")
+    time.sleep(1)
+    cls()
+    showBoard()
+    userInput()
+  else:
+    board[x]='X'
+    cls()
+    showBoard()
+    if check() == True:
+      return print("YOU WIN!")
+    elif check() == False:
+      return print("YOU LOSE!")
+    else:
+      compInput()    
+
+
+#Random computer-generated input
+def compInput():
+  x = random.choice(list(board))
+  if board[x] == "X" or board[x] == "O":
+    compInput()
+  else:
+    time.sleep(2)
+    board[x] = "O"
+    cls()
+    showBoard()
+    userInput()
+
+#Initiation
+showBoard()
+userInput()
